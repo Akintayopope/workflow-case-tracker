@@ -1,6 +1,15 @@
 import WorkItemRow from "./WorkItemRow";
 
-function WorkItemTable({ workItems }) {
+function WorkItemTable({
+    workItems,
+    updateWorkItemStatus,
+    startEditingWorkItem,
+    deleteWorkItem,
+}) {
+    if (!workItems || workItems.length === 0) {
+        return <p className="empty-text">No work items added yet.</p>;
+    }
+
     return (
         <div className="table-wrapper">
             <table className="work-table">
@@ -29,6 +38,10 @@ function WorkItemTable({ workItems }) {
                             priority={item.priority}
                             dueDate={item.dueDate}
                             createdDate={item.createdDate}
+                            updateWorkItemStatus={updateWorkItemStatus}
+                            startEditingWorkItem={startEditingWorkItem}
+                            deleteWorkItem={deleteWorkItem}
+                            item={item}
                         />
                     ))}
                 </tbody>

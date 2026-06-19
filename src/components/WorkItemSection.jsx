@@ -1,28 +1,62 @@
-import WorkItemFilter from "./WorkItemFilters"
-import WorkItemTable from "./WorkItemTable"
+import WorkItemFilters from "./WorkItemFilters";
+import WorkItemTable from "./WorkItemTable";
 
-function WorkItemSection({ workItems }) {
+function WorkItemSection({
+    searchTerm,
+    setSearchTerm,
+    statusFilter,
+    setStatusFilter,
+    priorityFilter,
+    setPriorityFilter,
+    clearFilters,
+    filteredWorkItems,
+    updateWorkItemStatus,
+    startEditingWorkItem,
+    deleteWorkItem,
+}) {
     return (
-        <section>
+        <section className="work-items-card">
             <h2>Work Items</h2>
-            <WorkItemFilter />
-            <WorkItemTable workItems={workItems} />
 
-            <div className="work-section-footer">
-                <p>Showing 1 to 4 of 4 items</p>
+            <WorkItemFilters
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                statusFilter={statusFilter}
+                setStatusFilter={setStatusFilter}
+                priorityFilter={priorityFilter}
+                setPriorityFilter={setPriorityFilter}
+                clearFilters={clearFilters}
+            />
 
-                <div className="pagination">
-                    <button type="button">‹</button>
-                    <button type="button" className="active-page">
-                        1
-                    </button>
-                    <button type="button">›</button>
+            <WorkItemTable
+                workItems={filteredWorkItems}
+                updateWorkItemStatus={updateWorkItemStatus}
+                startEditingWorkItem={startEditingWorkItem}
+                deleteWorkItem={deleteWorkItem}
+            />
+
+            {filteredWorkItems.length > 0 && (
+                <div className="table-footer">
+                    <p>
+                        Showing 1 to {filteredWorkItems.length} of{" "}
+                        {filteredWorkItems.length} items
+                    </p>
+
+                    <div className="pagination">
+                        <button className="page-btn" type="button">
+                            ‹
+                        </button>
+                        <button className="page-btn active" type="button">
+                            1
+                        </button>
+                        <button className="page-btn" type="button">
+                            ›
+                        </button>
+                    </div>
                 </div>
-            </div>
-
-
+            )}
         </section>
-    )
+    );
 }
 
-export default WorkItemSection
+export default WorkItemSection;
