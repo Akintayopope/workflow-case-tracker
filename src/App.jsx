@@ -27,14 +27,27 @@ function App() {
     formRef.current.scrollIntoView({ behavior: "smooth" });
   }
 
-  function addWorkItem(newWorkItem) {
-    const itemToAdd = {
-      ...newWorkItem,
-      id: workItems.length + 1,
-      createdDate: getTodayDate(),
-    };
+  async function addWorkItem(newWorkItem) {
+    try {
+      const response = await fetch("http://localhost:5000/api/work-items", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newWorkItem),
+      });
 
-    setWorkItems([...workItems, itemToAdd]);
+      if (!response.ok) {
+        throw new Error("Failed to add work item");
+      }
+
+      const savedWorkItem = await response.json();
+
+      setWorkItems([...workItems, savedWorkItem]);
+    } catch (error) {
+      console.log("Add work item error:", error);
+      alert("Could not add work item. Please try again.");
+    }
   }
 
   function startEditingWorkItem(item) {
@@ -42,42 +55,107 @@ function App() {
     scrollToForm();
   }
 
-  function updateWorkItem(updatedWorkItem) {
-    const updatedItems = workItems.map((item) => {
-      if (item.id === updatedWorkItem.id) {
-        return updatedWorkItem;
+  async function updateWorkItem(updatedWorkItem) {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/work-items/${updatedWorkItem.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedWorkItem),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update work item");
       }
 
-      return item;
-    });
+      const savedUpdatedWorkItem = await response.json();
 
-    setWorkItems(updatedItems);
-    setEditingItem(null);
+      const updatedItems = workItems.map((item) => {
+        if (item.id === savedUpdatedWorkItem.id) {
+          return savedUpdatedWorkItem;
+        }
+
+        return item;
+      });
+
+      setWorkItems(updatedItems);
+      setEditingItem(null);
+    } catch (error) {
+      console.log("Update work item error:", error);
+      alert("Could not update work item. Please try again.");
+    }
   }
 
   function cancelEdit() {
     setEditingItem(null);
   }
 
-  function deleteWorkItem(id) {
-    const updatedItems = workItems.filter((item) => item.id !== id);
-    setWorkItems(updatedItems);
+  async function deleteWorkItem(id) {
+    try {
+      const response = await fetch(`http://localhost:5000/api/work-items/${id}`, {
+        method: "DELETE",
+      });
 
-    if (editingItem && editingItem.id === id) {
-      setEditingItem(null);
+      if (!response.ok) {
+        throw new Error("Failed to delete work item");
+      }
+
+      const updatedItems = workItems.filter((item) => item.id !== id);
+      setWorkItems(updatedItems);
+
+      if (editingItem && editingItem.id === id) {
+        setEditingItem(null);
+      }
+    } catch (error) {
+      console.log("Delete work item error:", error);
+      alert("Could not delete work item. Please try again.");
     }
   }
 
-  function updateWorkItemStatus(id, newStatus) {
-    const updatedItems = workItems.map((item) => {
-      if (item.id === id) {
-        return { ...item, status: newStatus };
+  async function updateWorkItemStatus(id, newStatus) {
+    const itemToUpdate = workItems.find((item) => item.id === id);
+
+    if (!itemToUpdate) {
+      return;
+    }
+
+    const updatedWorkItem = {
+      ...itemToUpdate,
+      status: newStatus,
+    };
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/work-items/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedWorkItem),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update status");
       }
 
-      return item;
-    });
+      const savedUpdatedWorkItem = await response.json();
 
-    setWorkItems(updatedItems);
+      const updatedItems = workItems.map((item) => {
+        if (item.id === savedUpdatedWorkItem.id) {
+          return savedUpdatedWorkItem;
+        }
+
+        return item;
+      });
+
+      setWorkItems(updatedItems);
+    } catch (error) {
+      console.log("Update status error:", error);
+      alert("Could not update status. Please try again.");
+    }
   }
 
   function clearFilters() {
