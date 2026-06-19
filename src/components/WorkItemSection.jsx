@@ -1,12 +1,12 @@
 import WorkItemFilter from "./WorkItemFilters"
 import WorkItemTable from "./WorkItemTable"
 
-function WorkItemSection() {
+function WorkItemSection({ workItems }) {
     return (
         <section>
             <h2>Work Items</h2>
             <WorkItemFilter />
-            <WorkItemTable />
+            <WorkItemTable workItems={workItems} />
 
             <div className="work-section-footer">
                 <p>Showing 1 to 4 of 4 items</p>
