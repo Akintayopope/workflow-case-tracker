@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import WorkItemForm from "./components/WorkItemForm";
 import "./index.css";
 
@@ -10,6 +10,14 @@ function App() {
   const [editingItem, setEditingItem] = useState(null);
 
   const formRef = useRef(null);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/work-items")
+      .then((response) => response.json())
+      .then((data) => {
+        setWorkItems(data);
+      });
+  }, []);
 
   function getTodayDate() {
     return new Date().toISOString().split("T")[0];
