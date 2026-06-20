@@ -9,29 +9,6 @@ app.use(cors());
 app.use(express.json());
 
 
-const workItems = [
-    {
-        id: 1,
-        title: "Review case assignment",
-        description: "Check assigned officer and case priority",
-        assignedTo: "Jane Smith",
-        status: "Pending",
-        priority: "High",
-        dueDate: "2026-06-25",
-        createdDate: "2026-06-19",
-    },
-    {
-        id: 2,
-        title: "Update production report",
-        description: "Prepare weekly production summary",
-        assignedTo: "John Officer",
-        status: "In Progress",
-        priority: "Medium",
-        dueDate: "2026-06-28",
-        createdDate: "2026-06-19",
-    },
-];
-
 app.get("/api/work-items", async (req, res) => {
     try {
         const result = await pool.query(`
