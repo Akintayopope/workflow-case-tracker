@@ -43,16 +43,11 @@ function App() {
 
       const savedWorkItem = await response.json();
 
-      setWorkItems([...workItems, savedWorkItem]);
+      setWorkItems((currentWorkItems) => [...currentWorkItems, savedWorkItem]);
     } catch (error) {
       console.log("Add work item error:", error);
       alert("Could not add work item. Please try again.");
     }
-  }
-
-  function startEditingWorkItem(item) {
-    setEditingItem(item);
-    scrollToForm();
   }
 
   async function updateWorkItem(updatedWorkItem) {
@@ -90,10 +85,14 @@ function App() {
     }
   }
 
+  function startEditingWorkItem(item) {
+    setEditingItem(item);
+    scrollToForm();
+  }
+
   function cancelEdit() {
     setEditingItem(null);
   }
-
   async function deleteWorkItem(id) {
     try {
       const response = await fetch(`http://localhost:5000/api/work-items/${id}`, {
