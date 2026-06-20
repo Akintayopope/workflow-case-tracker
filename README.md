@@ -1,16 +1,166 @@
-# React + Vite
+# Workflow Case Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Workflow Case Tracker is a full-stack web application for tracking and managing work items. It allows users to create, view, update, filter, and delete work items.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Frontend
 
-## React Compiler
+* React
+* Vite
+* CSS
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Backend
 
-## Expanding the ESLint configuration
+* Node.js
+* Express.js
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Database
+
+* PostgreSQL
+
+## Features
+
+* View all work items
+* Add a new work item
+* Edit an existing work item
+* Update work item status
+* Delete a work item
+* Search work items by title or description
+* Filter work items by status
+* Filter work items by priority
+
+## Project Structure
+
+```text
+workflow-case-tracker/
+  src/
+    components/
+      WorkItemForm.jsx
+    App.jsx
+    index.css
+
+  server/
+    index.js
+    db.cjs
+    routes/
+      workItemRoutes.cjs
+    controllers/
+      workItemController.cjs
+    services/
+      workItemService.cjs
+    db/
+      schema.sql
+```
+
+## Backend Architecture
+
+The backend uses a layered structure:
+
+```text
+Route -> Controller -> Service -> Database
+```
+
+### Routes
+
+Routes define the API endpoints and connect each URL to the correct controller function.
+
+Examples:
+
+```text
+GET    /api/work-items
+POST   /api/work-items
+PUT    /api/work-items/:id
+DELETE /api/work-items/:id
+```
+
+### Controllers
+
+Controllers handle the request and response. They validate input, call the service layer, and return a response to the frontend.
+
+### Services
+
+Services contain the database logic. They use PostgreSQL queries to create, read, update, and delete work items.
+
+## API Endpoints
+
+| Method | Endpoint              | Description            |
+| ------ | --------------------- | ---------------------- |
+| GET    | `/api/work-items`     | Get all work items     |
+| POST   | `/api/work-items`     | Create a new work item |
+| PUT    | `/api/work-items/:id` | Update a work item     |
+| DELETE | `/api/work-items/:id` | Delete a work item     |
+
+## Database Table
+
+The main database table is `work_items`.
+
+Important fields:
+
+```text
+id
+title
+description
+assigned_to
+status
+priority
+due_date
+created_date
+```
+
+## Environment Variables
+
+The backend uses a `.env` file for database connection settings.
+
+Example:
+
+```env
+DB_USER=postgres
+DB_HOST=localhost
+DB_NAME=workflow_tracker
+DB_PASSWORD=your_password_here
+DB_PORT=5432
+```
+
+The `.env` file is ignored by Git for security.
+
+## How to Run the Project
+
+### Start the backend
+
+```powershell
+cd server
+npm run dev
+```
+
+The backend runs on:
+
+```text
+http://localhost:5000
+```
+
+### Start the frontend
+
+From the project root:
+
+```powershell
+npm run dev
+```
+
+The frontend runs on:
+
+```text
+http://localhost:5173
+```
+
+## What I Learned
+
+This project helped me practice:
+
+* React state management
+* Controlled forms
+* Express API development
+* PostgreSQL CRUD operations
+* Route, controller, and service backend structure
+* Environment variables
+* Git and GitHub workflow
