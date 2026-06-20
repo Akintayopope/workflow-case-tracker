@@ -1,182 +1,40 @@
 const express = require("express");
 const cors = require("cors");
-const pool = require("./db.cjs");
 
+// This file contains the GET, POST, PUT, and DELETE route definitions.
+const workItemRoutes = require("./routes/workItemRoutes.cjs");
+
+// Create the Express app
 const app = express();
+
+// Define the port where the backend will run
 const PORT = 5000;
 
+// Enable CORS so the React frontend can call this backend.
+// React runs on localhost:5173 and Express runs on localhost:5000,
+// so CORS is needed during development.
 app.use(cors());
+
+// Allow Express to read JSON data from request bodies.
+// This is needed for POST and PUT requests.
 app.use(express.json());
 
-
-app.get("/api/work-items", async (req, res) => {
-    try {
-        const result = await pool.query(`
-      SELECT 
-        id,
-        title,
-        description,
-        assigned_to AS "assignedTo",
-        status,
-        priority,
-        due_date AS "dueDate",
-        created_date AS "createdDate"
-      FROM work_items
-      ORDER BY id ASC
-    `);
-
-        res.json(result.rows);
-    } catch (error) {
-        console.log("Get work items error:", error.message);
-        res.status(500).json({
-            message: "Failed to get work items",
-        });
-    }
+// Optional test route.
+// This is useful when you open http://localhost:5000 in the browser.
+app.get("/", (req, res) => {
+    res.send("Workflow Tracker API is running");
 });
 
-app.get("/api/work-items", (req, res) => {
-    res.json(workItems);
-});
+// Mount all work item routes under /api/work-items.
+//
+// This means:
+// GET    /api/work-items       -> get all work items
+// POST   /api/work-items       -> create a new work item
+// PUT    /api/work-items/:id   -> update a work item
+// DELETE /api/work-items/:id   -> delete a work item
+app.use("/api/work-items", workItemRoutes);
 
-app.post("/api/work-items", async (req, res) => {
-    try {
-        const { title, description, assignedTo, status, priority, dueDate } = req.body;
-
-        if (!title || !assignedTo || !priority || !dueDate) {
-            return res.status(400).json({
-                message: "Title, assignedTo, priority, and dueDate are required",
-            });
-        }
-
-        const result = await pool.query(
-            `
-      INSERT INTO work_items 
-      (title, description, assigned_to, status, priority, due_date)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING 
-        id,
-        title,
-        description,
-        assigned_to AS "assignedTo",
-        status,
-        priority,
-        due_date AS "dueDate",
-        created_date AS "createdDate"
-      `,
-            [
-                title,
-                description,
-                assignedTo,
-                status || "Pending",
-                priority,
-                dueDate,
-            ]
-        );
-
-        res.status(201).json(result.rows[0]);
-    } catch (error) {
-        console.log("Create work item error:", error.message);
-        res.status(500).json({
-            message: "Failed to create work item",
-        });
-    }
-});
-
-
-app.put("/api/work-items/:id", async (req, res) => {
-    try {
-        const id = Number(req.params.id);
-
-        const { title, description, assignedTo, status, priority, dueDate } = req.body;
-
-        if (!title || !assignedTo || !priority || !dueDate) {
-            return res.status(400).json({
-                message: "Title, assignedTo, priority, and dueDate are required",
-            });
-        }
-
-        const result = await pool.query(
-            `
-      UPDATE work_items
-      SET 
-        title = $1,
-        description = $2,
-        assigned_to = $3,
-        status = $4,
-        priority = $5,
-        due_date = $6
-      WHERE id = $7
-      RETURNING
-        id,
-        title,
-        description,
-        assigned_to AS "assignedTo",
-        status,
-        priority,
-        due_date AS "dueDate",
-        created_date AS "createdDate"
-      `,
-            [title, description, assignedTo, status, priority, dueDate, id]
-        );
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({
-                message: "Work item not found",
-            });
-        }
-
-        res.json(result.rows[0]);
-    } catch (error) {
-        console.log("Update work item error:", error.message);
-
-        res.status(500).json({
-            message: "Failed to update work item",
-            error: error.message,
-        });
-    }
-});
-
-app.delete("/api/work-items/:id", async (req, res) => {
-    try {
-        const id = Number(req.params.id);
-
-        const result = await pool.query(
-            `
-      DELETE FROM work_items
-      WHERE id = $1
-      RETURNING
-        id,
-        title,
-        description,
-        assigned_to AS "assignedTo",
-        status,
-        priority,
-        due_date AS "dueDate",
-        created_date AS "createdDate"
-      `,
-            [id]
-        );
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({
-                message: "Work item not found",
-            });
-        }
-
-        res.json({
-            message: "Work item deleted successfully",
-            deletedWorkItem: result.rows[0],
-        });
-    } catch (error) {
-        console.log("Delete work item error:", error.message);
-
-        res.status(500).json({
-            message: "Failed to delete work item",
-            error: error.message,
-        });
-    }
-});
-
+// Start the backend server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
