@@ -1,45 +1,76 @@
 function WorkItemRow({
-    id,
-    title,
-    description,
-    assignedTo,
-    status,
-    priority,
-    dueDate,
-    createdDate,
+    item,
+    updateWorkItemStatus,
+    startEditingWorkItem,
+    deleteWorkItem,
 }) {
-    const statusClass = status ? status.toLowerCase().replace(" ", "-") : "";
-    const priorityClass = priority ? priority.toLowerCase() : "";
+
+    function formatDate(dateValue) {
+        if (!dateValue) {
+            return "";
+        }
+
+        return dateValue.split("T")[0];
+    }
+    const statusClass = item.status
+        ? item.status.toLowerCase().replace(" ", "-")
+        : "";
+
+    const priorityClass = item.priority ? item.priority.toLowerCase() : "";
 
     return (
         <tr>
-            <td>{id}</td>
+            <td>{item.id}</td>
 
             <td>
-                <p className="item-title">{title}</p>
-                <p className="item-description">{description}</p>
+                <div className="title-cell">
+                    <div className="title-link">{item.title}</div>
+                    <div className="title-description">{item.description}</div>
+                </div>
             </td>
 
-            <td>{assignedTo}</td>
+            <td>{item.assignedTo}</td>
 
             <td>
-                <span className={`badge status-${statusClass}`}>{status}</span>
+                <select
+                    className={`status-select status-${statusClass}`}
+                    value={item.status}
+                    onChange={(event) =>
+                        updateWorkItemStatus(item.id, event.target.value)
+                    }
+                >
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                </select>
             </td>
 
             <td>
-                <span className={`badge priority-${priorityClass}`}>{priority}</span>
+                <span className={`badge badge-${priorityClass}`}>
+                    {item.priority}
+                </span>
             </td>
 
-            <td>{dueDate}</td>
-            <td>{createdDate}</td>
+            <td>{formatDate(item.dueDate)}</td>
+            <td>{formatDate(item.createdDate)}</td>
 
             <td>
-                <div className="action-buttons">
-                    <button type="button" className="edit-btn">
+                <div className="actions-cell">
+                    <button
+                        className="icon-btn edit-btn"
+                        type="button"
+                        onClick={() => startEditingWorkItem(item)}
+                        title="Edit"
+                    >
                         ✎
                     </button>
 
-                    <button type="button" className="delete-btn">
+                    <button
+                        className="icon-btn delete-btn"
+                        type="button"
+                        onClick={() => deleteWorkItem(item.id)}
+                        title="Delete"
+                    >
                         🗑
                     </button>
                 </div>

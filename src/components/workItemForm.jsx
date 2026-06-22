@@ -88,6 +88,7 @@ function WorkItemForm({
                 <div className="form-grid">
                     <div className="form-field">
                         <label>Title *</label>
+
                         <input
                             type="text"
                             placeholder="Enter title"
@@ -98,15 +99,17 @@ function WorkItemForm({
 
                     <div className="form-field">
                         <label>Description</label>
+
                         <textarea
                             placeholder="Enter description"
                             value={description}
                             onChange={(event) => setDescription(event.target.value)}
-                        ></textarea>
+                        />
                     </div>
 
                     <div className="form-field">
                         <label>Assigned To *</label>
+
                         <select
                             value={assignedTo}
                             onChange={(event) => setAssignedTo(event.target.value)}
@@ -121,6 +124,7 @@ function WorkItemForm({
 
                     <div className="form-field">
                         <label>Priority *</label>
+
                         <select
                             value={priority}
                             onChange={(event) => setPriority(event.target.value)}
@@ -134,6 +138,7 @@ function WorkItemForm({
 
                     <div className="form-field">
                         <label>Status</label>
+
                         <select
                             value={status}
                             onChange={(event) => setStatus(event.target.value)}
@@ -146,6 +151,7 @@ function WorkItemForm({
 
                     <div className="form-field">
                         <label>Due Date *</label>
+
                         <input
                             type="date"
                             value={dueDate}

@@ -46,9 +46,11 @@ function WorkItemSection({
                         <button className="page-btn" type="button">
                             ‹
                         </button>
+
                         <button className="page-btn active" type="button">
                             1
                         </button>
+
                         <button className="page-btn" type="button">
                             ›
                         </button>

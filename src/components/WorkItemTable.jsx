@@ -30,18 +30,10 @@ function WorkItemTable({
                     {workItems.map((item) => (
                         <WorkItemRow
                             key={item.id}
-                            id={item.id}
-                            title={item.title}
-                            description={item.description}
-                            assignedTo={item.assignedTo}
-                            status={item.status}
-                            priority={item.priority}
-                            dueDate={item.dueDate}
-                            createdDate={item.createdDate}
+                            item={item}
                             updateWorkItemStatus={updateWorkItemStatus}
                             startEditingWorkItem={startEditingWorkItem}
                             deleteWorkItem={deleteWorkItem}
-                            item={item}
                         />
                     ))}
                 </tbody>
