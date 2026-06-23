@@ -36,7 +36,11 @@ Workflow Case Tracker is a full-stack web application for tracking and managing 
 workflow-case-tracker/
   src/
     components/
+      WorkItemFilter.jsx
       WorkItemForm.jsx
+      WorkItemRow.jsx
+      WorkItemSection.jsx
+      WorkItemTable.jsx
     App.jsx
     index.css
 
@@ -153,14 +157,4 @@ The frontend runs on:
 http://localhost:5173
 ```
 
-## What I Learned
 
-This project helped me practice:
-
-* React state management
-* Controlled forms
-* Express API development
-* PostgreSQL CRUD operations
-* Route, controller, and service backend structure
-* Environment variables
-* Git and GitHub workflow
