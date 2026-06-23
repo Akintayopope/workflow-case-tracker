@@ -3,6 +3,7 @@ const cors = require("cors");
 
 // This file contains the GET, POST, PUT, and DELETE route definitions.
 const workItemRoutes = require("./routes/workItemRoutes.cjs");
+const officerRoutes = require("./routes/officerRoutes.cjs");
 
 // Create the Express app
 const app = express();
@@ -33,6 +34,7 @@ app.get("/", (req, res) => {
 // PUT    /api/work-items/:id   -> update a work item
 // DELETE /api/work-items/:id   -> delete a work item
 app.use("/api/work-items", workItemRoutes);
+app.use("/api/officers", officerRoutes);
 
 // Start the backend server
 app.listen(PORT, () => {

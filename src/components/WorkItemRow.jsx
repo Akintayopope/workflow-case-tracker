@@ -29,7 +29,9 @@ function WorkItemRow({
                 </div>
             </td>
 
-            <td>{item.assignedTo}</td>
+            <td>
+                {item.assignedToUserId} - {item.assignedToName}
+            </td>
 
             <td>
                 <select

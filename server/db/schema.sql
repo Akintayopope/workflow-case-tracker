@@ -25,7 +25,7 @@ VALUES
 (
   'Review case assignment',
   'Check assigned officer and case priority',
-  'Jane Smith',
+  'GGF654 - John Officer',
   'Pending',
   'High',
   '2026-06-25'
@@ -33,7 +33,7 @@ VALUES
 (
   'Update production report',
   'Prepare weekly production summary',
-  'John Officer',
+  'TRP981 - Mike Brown',
   'In Progress',
   'Medium',
   '2026-06-28'

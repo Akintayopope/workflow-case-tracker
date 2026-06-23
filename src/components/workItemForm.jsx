@@ -8,26 +8,41 @@ function WorkItemForm({
 }) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [assignedTo, setAssignedTo] = useState("");
+    const [officers, setOfficers] = useState([]);
+    const [assignedToUserId, setAssignedToUserId] = useState("");
     const [priority, setPriority] = useState("");
     const [status, setStatus] = useState("Pending");
     const [dueDate, setDueDate] = useState("");
 
     useEffect(() => {
+        async function fetchOfficers() {
+            try {
+                const response = await fetch("http://localhost:5000/api/officers");
+                const data = await response.json();
+                setOfficers(data);
+            } catch (error) {
+                console.log("Failed to fetch officers:", error.message);
+            }
+        }
+
+        fetchOfficers();
+    }, []);
+
+    useEffect(() => {
         if (editingItem) {
             setTitle(editingItem.title);
             setDescription(editingItem.description);
-            setAssignedTo(editingItem.assignedTo);
+            setAssignedToUserId(editingItem.assignedToUserId || "");
             setPriority(editingItem.priority);
             setStatus(editingItem.status);
-            setDueDate(editingItem.dueDate);
+            setDueDate(editingItem.due_date || editingItem.dueDate);
         }
     }, [editingItem]);
 
     function resetForm() {
         setTitle("");
         setDescription("");
-        setAssignedTo("");
+        setAssignedToUserId("");
         setPriority("");
         setStatus("Pending");
         setDueDate("");
@@ -38,7 +53,7 @@ function WorkItemForm({
 
         if (
             title.trim() === "" ||
-            assignedTo === "" ||
+            assignedToUserId === "" ||
             priority === "" ||
             dueDate === ""
         ) {
@@ -51,7 +66,7 @@ function WorkItemForm({
                 ...editingItem,
                 title,
                 description,
-                assignedTo,
+                assignedToUserId,
                 priority,
                 status,
                 dueDate,
@@ -65,7 +80,7 @@ function WorkItemForm({
         const newWorkItem = {
             title,
             description,
-            assignedTo,
+            assignedToUserId,
             priority,
             status,
             dueDate,
@@ -111,14 +126,21 @@ function WorkItemForm({
                         <label>Assigned To *</label>
 
                         <select
-                            value={assignedTo}
-                            onChange={(event) => setAssignedTo(event.target.value)}
+                            value={assignedToUserId}
+                            onChange={(event) =>
+                                setAssignedToUserId(event.target.value)
+                            }
                         >
                             <option value="">Select officer</option>
-                            <option value="John Officer">John Officer</option>
-                            <option value="Jane Smith">Jane Smith</option>
-                            <option value="Mike Brown">Mike Brown</option>
-                            <option value="Sarah Lee">Sarah Lee</option>
+
+                            {officers.map((officer) => (
+                                <option
+                                    key={officer.user_id}
+                                    value={officer.user_id}
+                                >
+                                    {officer.user_id} - {officer.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
 

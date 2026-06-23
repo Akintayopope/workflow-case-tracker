@@ -16,11 +16,11 @@ async function getAllWorkItems(req, res) {
 
 async function createWorkItem(req, res) {
     try {
-        const { title, assignedTo, priority, dueDate } = req.body;
+        const { title, assignedToUserId, priority, dueDate } = req.body;
 
-        if (!title || !assignedTo || !priority || !dueDate) {
+        if (!title || !assignedToUserId || !priority || !dueDate) {
             return res.status(400).json({
-                message: "Title, assignedTo, priority, and dueDate are required",
+                message: "Title, assignedToUserId, priority, and dueDate are required",
             });
         }
 
@@ -41,11 +41,11 @@ async function updateWorkItem(req, res) {
     try {
         const id = Number(req.params.id);
 
-        const { title, assignedTo, priority, dueDate } = req.body;
+        const { title, assignedToUserId, priority, dueDate } = req.body;
 
-        if (!title || !assignedTo || !priority || !dueDate) {
+        if (!title || !assignedToUserId || !priority || !dueDate) {
             return res.status(400).json({
-                message: "Title, assignedTo, priority, and dueDate are required",
+                message: "Title, assignedToUserId, priority, and dueDate are required",
             });
         }
 
